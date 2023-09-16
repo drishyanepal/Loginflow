@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.loginflow.R
 import com.example.loginflow.components.ButtonComponent
@@ -26,10 +27,13 @@ import com.example.loginflow.components.HeadingTextComponents
 import com.example.loginflow.components.MyTextField
 import com.example.loginflow.components.NormalTextComponents
 import com.example.loginflow.components.PasswordTextField
+import com.example.loginflow.data.LoginViewModel
+import com.example.loginflow.data.UIEvent
 import com.example.loginflow.navigation.Screen
 
 @Composable
-fun SignUpScreen(navController: NavController) {
+fun SignUpScreen(navController: NavController, loginViewModel: LoginViewModel = viewModel()) {
+    val loginViewModel = LoginViewModel()
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -42,13 +46,21 @@ fun SignUpScreen(navController: NavController) {
             NormalTextComponents(value = stringResource(R.string.hello))
             HeadingTextComponents(value = stringResource(R.string.create_account))
             Spacer(Modifier.height(12.dp))
-            MyTextField(labelValue = "First Name", Icons.Sharp.Person)
-            MyTextField(labelValue = "Last Name", Icons.Sharp.Person)
-            MyTextField(labelValue = "Email", Icons.Sharp.Email)
-            PasswordTextField(labelValue = "Password")
+            MyTextField(labelValue = "First Name",
+                Icons.Sharp.Person,
+                onTextSelected = { loginViewModel.onEvent(UIEvent.FirstNameChanged(it)) })
+            MyTextField(labelValue = "Last Name", Icons.Sharp.Person, onTextSelected = {
+                loginViewModel.onEvent(UIEvent.LastNameChanged(it))
+            })
+            MyTextField(labelValue = "Email", Icons.Sharp.Email, onTextSelected = {
+                loginViewModel.onEvent(UIEvent.EmailChanged(it))
+            })
+            PasswordTextField(labelValue = "Password", onTextSelected = {
+                loginViewModel.onEvent(UIEvent.PasswordChanged(it))
+            })
             CheckboxComponent()
             Spacer(modifier = Modifier.height(80.dp))
-            ButtonComponent("Register",navController)
+            ButtonComponent("Register", navController)
             Spacer(modifier = Modifier.height(20.dp))
             DividerComponent()
             Spacer(modifier = Modifier.height(10.dp))

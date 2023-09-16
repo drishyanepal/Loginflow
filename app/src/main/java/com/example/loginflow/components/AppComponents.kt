@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.sharp.Favorite
 import androidx.compose.material.icons.sharp.FavoriteBorder
+import androidx.compose.material.icons.sharp.Lock
 import androidx.compose.material.icons.sharp.Visibility
 import androidx.compose.material.icons.sharp.VisibilityOff
 import androidx.compose.material3.Button
@@ -78,7 +79,7 @@ fun HeadingTextComponents(value: String) {
 }
 
 @Composable
-fun MyTextField(labelValue: String, imageVector: ImageVector) {
+fun MyTextField(labelValue: String, imageVector: ImageVector, onTextSelected: (String) -> Unit) {
 
     val textValue = remember {
         mutableStateOf("")
@@ -90,14 +91,17 @@ fun MyTextField(labelValue: String, imageVector: ImageVector) {
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = Purple80, focusedLabelColor = Purple40, cursorColor = Purple80
         ),
-        onValueChange = { textValue.value = it },
+        onValueChange = {
+            textValue.value = it
+            onTextSelected(it)
+        },
         leadingIcon = {
             Icon(imageVector, contentDescription = null)
         })
 }
 
 @Composable
-fun PasswordTextField(labelValue: String) {
+fun PasswordTextField(labelValue: String, onTextSelected: (String) -> Unit) {
 
     val password = remember {
         mutableStateOf("")
@@ -115,9 +119,12 @@ fun PasswordTextField(labelValue: String) {
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = Purple80, focusedLabelColor = Purple40, cursorColor = Purple80
         ),
-        onValueChange = { password.value = it },
+        onValueChange = {
+            password.value = it
+            onTextSelected(it)
+        },
         leadingIcon = {
-            Icon(imageVector = Icons.Filled.Favorite, contentDescription = null)
+            Icon(imageVector = Icons.Sharp.Lock, contentDescription = null)
         },
         trailingIcon = {
             val iconImage = if (passwordVisible.value) {
@@ -181,11 +188,11 @@ fun ClickableTextComponent() {
 }
 
 @Composable
-fun ButtonComponent(label: String,navController: NavController) {
+fun ButtonComponent(label: String, navController: NavController) {
     Button(
         onClick = {
             navController.popBackStack()
-                  }, modifier = Modifier
+        }, modifier = Modifier
             .fillMaxWidth()
             .heightIn(48.dp)
     ) {
